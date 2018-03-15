@@ -148,8 +148,66 @@ Vamos editar nosso cookbook para que possamos executar algo em nosso novo node. 
 
 Para isto, edite o conteúdo do arquivo `recipes/default.rb` e insira o seguinte:
 
-```ruby
-file `/tmp/motd.txt` do
-  content 'Arquivo criado utilizando o Chef Server!'
-end
-```
+    file '/tmp/motd.txt' do
+      content 'Arquivo criado utilizando o Chef Server!'
+    end
+
+Após realizar a edição, salve o arquivo.
+
+## 10. Enviando o cookbook para o Chef Server
+
+Como vimos anteriormente, todas as receitas são disponibilizadas em nossos nodes através do Chef Server. Sendo assim, devemos enviar a receita recém criada para o servidor. Para isto, vamos executar os seguintes comandos:
+
+    # knife upload cookbooks/motd
+
+> NOTE: Este arquivo deverá ser executado a partir do diretório `chef-repo`.
+
+Após realizar o upload de seu cookbook, você poderá verificar o conteúdo do mesmo através da interface web, clicando em `Policy` na parte superior da tela, clidando em seu cookbook, chamado `motd` e em seguida, na parte inferior da tela, selecionando `Recipes` e em seguida `default.rb`, conforme a imagem abaixo:
+
+![listando_cookbook](https://github.com/bemer/23ati/blob/master/images/listando_cookbook.png)
+
+Você também conseguirá listar os cookbooks presentes no servidor através do seguinte comando:
+
+    # knife cookbook list
+
+## 11. Alterando o Run List do Node
+
+Como nosso cookbook já está presente em nosso servidor, o próximo passo é editar o `Run list` para que o Chef Client instalado em nosso container possa realizar o download e a execução de nossa receita.
+
+Para isto, na interface web do servidor, vamos clicar em `Nodes` na parte superior da tela, selecionar o nosso node chamado `motd_server` e clicar no campo `Edit Run List` em actions:
+
+![node_run_list_1](https://github.com/bemer/23ati/blob/master/images/node_run_list_1.png)
+
+Em seguida, devemos arrastar a receita `motd` presente em `Available Recipes` para o campo `Current Run List`:
+
+![node_run_list_2](https://github.com/bemer/23ati/blob/master/images/node_run_list_2.png)
+
+Em seguida, vamos clicar em `Save Run List`.
+
+Você pode validar a nova Run List de seu node através do comando:
+
+    # knife node show motd_server
+
+Verifique se a receita `motd` está sendo exibida.
+
+## 12. Executando nossa receita
+
+O próximo passo para isto, é executar a nossa Run List no node `motd_server` para que a receita `motd` possa criar o arquivo no diretório `/tmp`.
+
+Vamos então acessar o nosso `Chef Client` e executar o seguinte comando:
+
+    # docker exec -ti motd_server /bin/bash
+
+> NOTE: Este comando irá nos mover para dentro do container `motd_server` que está simulando um servidor em nosso ambiente. A partir daí, todos os comandos são executados dentro do container, e não no Chef Client.
+
+Vamos agora utilizar o chef-client que foi instalado em nosso container durante o processo de bootstrap. Para isto, utilizamos o comando:
+
+    # chef-client
+
+Note que o `chef-client` irá realizar o download de seu cookbook e executar os passos localmente.
+
+## 13. Verificando os relatórios
+
+Agora, na interface web do Chef Server, clique em `Reports` na parte superior da tela, e verifique o status de suas execuções:
+
+![reporting](https://github.com/bemer/23ati/blob/master/images/reporting.png)
