@@ -148,8 +148,8 @@ Vamos editar nosso cookbook para que possamos executar algo em nosso novo node. 
 
 Para isto, edite o conteúdo do arquivo `recipes/default.rb` e insira o seguinte:
 
-    ```ruby
-    file `/tmp/motd.txt` do
-      content 'Arquivo criado utilizando o Chef Server!'
-    end
-    ```
+```ruby
+file `/tmp/motd.txt` do
+  content 'Arquivo criado utilizando o Chef Server!'
+end
+```
