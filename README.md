@@ -11,4 +11,13 @@ Após iniciar o servidor através da console da AWS, vamos executar os seguintes
     # chef-server-ctl reconfigure
     # chef-manage-ctl reconfigure
 
-Após isto, devemos acessar novamente o Chef-Server através da interface web, baixar o Starter Kit e enviar para o nosso Workspace.
+
+## 2. Acessar o Chef Server e excluir o node existente
+
+No último lab, utilizamos um container para simular o registro de um `Node` no Chef Server. Como o container em questão não existe mais (pois desligamos o servidor onde o mesmo está em execução), devemos excluir o Node através da interface web do Chef Server.
+
+Para isto, em `Nodes`, vamos selecionar o node `first_container` e no campo actions, no canto direito da página, clicar em `Delete`, conforme a imagem a seguir:
+
+![delete_node](https://github.com/bemer/23ati/blob/master/images/delete_node.png)
+
+## 3. 
