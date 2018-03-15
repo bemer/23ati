@@ -75,3 +75,51 @@ Note que não existe nenhum container em execução.
 Vamos agora, executar um novo container, agora chamado `motd_server` executando o comando:
 
     # docker run -d -P --name motd_server ssh_container
+
+Verifique o status de seu container através do comando:
+
+    # docker ps
+
+A saída deverá ser semelhante a:
+
+    CONTAINER ID        IMAGE               COMMAND               CREATED             STATUS              PORTS                   NAMES
+    580fe1c98903        ssh_container       "/usr/sbin/sshd -D"   2 seconds ago       Up 1 second         0.0.0.0:32768->22/tcp   motd_server
+
+## 6. Obtendo os dados para Bootstrap do novo Node
+
+Ainda no `Chef Client`, obtenha os dados para bootstrap de seu novo node. O primeiro passo é obter o endereço IP de sua instância. Faça isso através do comando:
+
+    # curl --silent --show-error --url http://169.254.169.254/latest/meta-data/local-ipv4; echo
+
+Tome nota deste endereço IP, pois o mesmo será utilizado para o bootstrap de nosso novo Node.
+Agora, devemos obter a porta sendo mapeada em nossa instância para o acesso via ssh ao container em execução. Para isto, execute o comando:
+
+    # docker port motd_server 22 | awk '{split($0,a,":"); print a[2]}'
+
+Anote também a porta utilizada por este container.
+
+
+## 7. Bootstrap de nosso novo Node
+
+Vamos agora acessar o `Chef Server` e utilizando o knife realizar o bootstrap de nosso novo node.
+Ao acessar o Chef Server, acesse o diretório `chef-repo`. Você pode verificar se já se encontra no diretório correto através do comando:
+
+    # pwd
+
+Caso não esteja no diretório, acesse o mesmo utilizando o comando:
+
+    # cd chef-repo
+
+Vamos agora utilizar o knife para realizar o bootstrap de nosso novo container. Para isto, devemos utilizar o comando:
+
+    # knife bootstrap `<endereço_IP_do_chef_client>`:`<porta_do_container>` -x root -P 123456 -N motd_server
+
+Feito isto, vamos validar o bootstrap de nosso novo container primeiro em nossa interface web. Acesse novamente o Chef Server através da Web, e note que deverá existir um novo Node com o nome `motd_server`:
+
+![motd_server](https://github.com/bemer/23ati/blob/master/images/motd_server.png)
+
+Podemos também listar o nosso node através do comando:
+
+    # knife client list
+
+O node `motd_server` deverá ser listado em sua linha de comando.
