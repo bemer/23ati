@@ -123,3 +123,33 @@ Podemos também listar o nosso node através do comando:
     # knife client list
 
 O node `motd_server` deverá ser listado em sua linha de comando.
+
+## 8. Criando um cookbook
+
+Como já temos nosso ambiente funcional e com um node já registrado, vamos agora criar um novo cookbook para execução através do Chef Server.
+
+Para isto, vamos utilizar o seguinte comando:
+
+    # chef generate cookbook cookbooks/motd
+
+Gaste algum tempo para analizar a saída deste comando.
+
+Após entender o que foi feito, vamos editar a nossa receita. Para isto, o primeiro passo é acessar o diretório `cookbooks` em nosso chef-repo. Utilize o comando:
+
+    # cd cookbooks/motd
+
+Explore o conteúdo deste diretório, afim de entender como funciona a estrutura padrão dos cookbooks do chef. Você pode inclusive explorar o conteúdo dos arquivos utilizando o comando `cat`.
+
+Mais informações sobre a estrutura dos cookbooks podem ser encontrados [neste link](https://docs.chef.io/cookbooks.html).
+
+## 9. Editando a receita default
+
+Vamos editar nosso cookbook para que possamos executar algo em nosso novo node. Neste caso, vamos criar uma receita simples, que cria um arquivo chamado `motd.txt` no diretório `/tmp` de nosso container.
+
+Para isto, edite o conteúdo do arquivo `recipes/default.rb` e insira o seguinte:
+
+    ```ruby
+    file `/tmp/motd.txt` do
+      content 'Arquivo criado utilizando o Chef Server!'
+    end
+    ```
