@@ -226,7 +226,7 @@ Agora, vamos gerar uma nova imagem a partir de nosso Dockerfile. Esta imagem ir�
 
 Após a geração desta imagem, vamos executar um novo container, expondo também a porta 80. Utilize o comando:
 
-    # docker run -d -p 80:80 -P --name apache_server apache_image
+    # docker run -d -p 80:80 -P --name apache_server ssh_apache_image
 
 Vamos agora listar as portas utilizadas em nosso novo container utilizando o comando:
 
